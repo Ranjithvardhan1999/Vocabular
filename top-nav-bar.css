@@ -1,0 +1,28 @@
+#top-nav-main{
+    display: flex;
+    justify-content: space-between;
+}
+#top-left-id{
+    display: flex;
+    align-items: flex-end;
+    column-gap: 5px;
+
+}
+#top-right-id{
+    width: fit-content;
+    display: ;
+}
+#burger-id{
+    width: 30px;
+}
+#icon-id{
+    height: 50px;
+}
+#vertical-rod-div{
+    width: 2px;
+    background-color: black;
+}
+#vocabular-id{
+    font-family: raleway;
+    font-weight: bold;
+}

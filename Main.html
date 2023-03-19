@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="top-nav-bar.css">
+    <link rel="stylesheet" href="middle-nav-bar.css">
+    <link rel="stylesheet" href="bottom-nav.css">
+</head>
+<body id="body" onload="refresh_func()">
+    <div id="top-nav-main">
+        <div id="top-left-id">
+            <img id="icon-id" src="./svgs/icon.svg">
+            <div id="vocabular-id">
+                VOCABULAR
+            </div>
+        </div>
+        <div id="top-right-id">
+            <div id="Score_id">
+                <button id="attempted_id">
+                    
+                </button>
+                <button id="correct_id">
+
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="middle-nav">
+        <span id="middle-first-p-id" class="middle-p">Hi Mate! Ready to Shuffle?</span>
+        <span id="middle-second-id" class="middle-p">Just Push Shuffle When you are ready</span>
+        <span id="smiley-id">&#9787;</span>
+    </div>
+    <div id="bottom-nav-id">
+        <button id="shuffle-button-id" class="button" onclick="nodisplay_func(); delete_shuffle_add_submit();">
+            Shuffle
+        </button>
+    </div>
+    <div id="input-id"> 
+        <input id="vocab_input" type="text" placeholder="Word goes here">
+        <input id="desc_input" type="text" placeholder="Meaning goes here">
+        <button id="submit_button" onclick="var_func(); clear_func();">
+            submit
+        </button> 
+    </div>
+
+    <div id="vocab_desc_div_id">
+        <p id="output_1">
+            
+        </p>
+
+        <button id="next_button" onclick="cant_skip(); attempted_count(); count_final_func();correct_count(); start_func(); output_display_regain(); radio_display_on(); color_dropper(); disable_disabled(); delete_eg();">
+            Start
+        </button>
+    </div>
+    <div id="labels_id">
+        <div id="label_div_1" style="display:flex">
+            <label id="label_text_id_1">
+            </label>
+        </div>
+        <div id="label_div_2" style="display:flex">
+            <label id="label_text_id_2">
+            </label>
+        </div>
+        <div id="label_div_3" style="display:flex">
+            <label id="label_text_id_3">
+            </label>
+        </div>
+        <div id="label_div_4" style="display:flex">
+            <label id="label_text_id_4">
+            </label>
+        </div>
+        <div id="label_div_5" style="display:flex">
+            <label id="label_text_id_5">
+            </label>
+        </div>
+        
+    </div>
+    <div id="eg_id">
+        <input id="example_id" type="text" placeholder="Example" style="display: block;align-content: center;">
+    </div>
+
+
+    <script>
+    try{    
+    number_of_corrects = localStorage.getItem('correct_attempts');
+    let get_correct_element = document.getElementById("correct_id");
+    if (number_of_corrects != null){
+    get_correct_element.innerText = "Correct Attempts = " + number_of_corrects;}
+    else{
+        get_correct_element.innerText = "Correct Attempts = 0";}
+    }
+    finally{
+        //
+    };
+    try{
+        number_of_attempt = localStorage.getItem("count_of_attempted");
+        let get_attempted_element = document.getElementById("attempted_id");
+        if (number_of_attempt != null){
+        get_attempted_element.innerText = "number_of_attempt = " + number_of_attempt;}
+        else{
+            get_attempted_element.innerText = "number_of_attempt = 0";}
+    }finally{
+        //
+    }
+
+
+
+
+
+    function var_func(){
+         let vocab_push = document.getElementById('vocab_input').value;
+         let desc_push = document.getElementById('desc_input').value;
+         let example_push = document.getElementById("example_id").value;
+
+         vocab_push = vocab_push.replace(/,/g, "\u3001");
+         desc_push = desc_push.replace(/,/g, "\u3001");
+         example_push = example_push.replace(/,/g, "\u3001");
+
+            // If the Input blocks are empty
+
+         if ((vocab_push === ("")) || (desc_push ===("")) || (example_push ===(""))){
+            alert("Please fill in both Output_1 and it's description");
+        }
+
+            //First time the input blocks are not empty
+
+        else if ((localStorage.getItem("vocab_in_ls") === null) && (vocab_push !== ("")) && (desc_push !== (""))) {
+            let vocab_input_array = [];
+            let desc_input_array = [];
+            let example_input_array = [];
+
+            // console.log("vocab_input is created and the value is " + vocab_input_array + "and the typeof of vocab_input_array is" + typeof(vocab_input_array));
+            // console.log("desc_input_array is creaete and the value is " + desc_input_array+ "and the typeof of desc_input_array is" + typeof(desc_input_array));
+
+            vocab_input_array = vocab_input_array.concat(vocab_push);
+            desc_input_array = desc_input_array.concat(desc_push);
+            example_input_array = example_input_array.concat(example_push)
+
+            // console.log("vocab_input_array is pushed with vocab_push and the value is" + vocab_input_array + "and the typeof of vocab_input_array is" + typeof(vocab_input_array));
+            // console.log("desc_input_array is pushed with desc_push and the value is" + desc_input_array+ "and the typeof of desc_input_array is" + typeof(desc_input_array));
+
+            localStorage.setItem('vocab_in_ls',vocab_input_array);
+            localStorage.setItem('desc_in_ls',desc_input_array);
+            localStorage.setItem('eg_in_ls',example_input_array);
+
+            // console.log("vocab_input_array is set with a name Vocab_in_ls");
+            // console.log("desc_input_array is set with a name desc_in_ls");
+        }
+            //other times
+
+        else if ((localStorage.getItem("vocab_in_ls") !== null) && (vocab_push !== ("")) && (desc_push !== (""))){
+
+        get_vocab_ls = localStorage.getItem('vocab_in_ls');
+        get_desc_ls = localStorage.getItem('desc_in_ls');
+        get_eg_ls = localStorage.getItem('eg_in_ls')
+
+        // console.log("get_vocab_ls value is fetched from local storage and the value is", get_vocab_ls + "and the typeof(get_vocab_ls) " + typeof(get_vocab_ls));
+        // console.log("get_desc_ls value is fetched from local storage and the value is", get_desc_ls + "and the typeof(get_desc_ls) " + typeof(get_desc_ls));
+
+        str2arr_vocab = get_vocab_ls.split(",");
+        str2arr_desc = get_desc_ls.split(",");
+        str2arr_eg = get_eg_ls.split(",")
+
+        // console.log("get_vocab_ls value was a string now converted into an array with comma(,) as a separator and the value is ", str2arr_vocab + "and the typeof(get_vocab_ls) " + typeof(str2arr_vocab));
+        // console.log("get_desc_ls value was a string now converted into an array with comma(,) as a separator and the value is ", str2arr_desc + "and the typeof(get_vocab_ls) " + typeof(str2arr_desc));
+
+        // console.log("get_vocab_ls is splitted and the value is " + get_vocab_ls + "and the typeof(get_vocab_ls) is" + typeof(get_vocab_ls));
+        // console.log("get_desc_ls is splitted and the value is " + get_desc_ls + "and the typeof(get_desc_ls) is" + typeof(get_desc_ls));
+
+        let vocab_input_array = [];
+        let desc_input_array = [];
+        let example_input_array = [];
+
+
+
+        vocab_input_array = vocab_input_array.concat(str2arr_vocab,vocab_push);
+        desc_input_array = desc_input_array.concat(str2arr_desc,desc_push);
+        example_input_array = example_input_array.concat(str2arr_eg,example_push);
+
+        // console.log("vocab_input_array is pushed with vocab_push and previous get_vocab_ls[0] value is " + vocab_input_array[vocab_input_array.length -1] + "typeof of vocab_input_array is" + typeof(vocab_input_array));
+        // console.log("desc_input_array is pushed with desc_push  and previous get_desc_ls[0] value is" + desc_input_array[desc_input_array.length-1] + "typeof of desc_input_array is" + typeof(desc_input_array));
+
+
+        
+
+        localStorage.setItem('vocab_in_ls',vocab_input_array);
+        localStorage.setItem('desc_in_ls',desc_input_array);
+        localStorage.setItem('eg_in_ls',example_input_array);
+
+        // console.log("vocab_input_array is set with a name Vocab_in_ls");
+        // console.log("desc_input_array is set with a name desc_in_ls");
+
+        
+        }
+        //after a long long trouble there are twoarrays with output_1 and output_2 values. with keys vocab_in_ls and desc_in_ls with file names vocab_input_array and desc_input_array
+        // all we have left with is to just show some of the random ones by slicing this two arrays.
+
+
+        //block display function
+        
+    }
+
+
+
+
+    function nodisplay_func(){
+            const no_display_vocab = document.getElementById("vocab_input");
+            const no_display_desc = document.getElementById("desc_input");
+            const submit_button_display = document.getElementById("submit_button");
+            const no_display_eg = document.getElementById("eg_id");
+
+            no_display_vocab.style.display = "none";
+            no_display_desc.style.display = "none";
+            submit_button_display.style.display = "none";
+            no_display_eg.style.display = "none";
+
+
+            const vocab_desc_display = document.getElementById("vocab_desc_div_id");
+
+            vocab_desc_display.style.display = "flex"
+            vocab_desc_display.style.justifyContent = "center";
+            vocab_desc_display.style.columnGap = "40px";
+            vocab_desc_display.style.alignItems = "center"            
+
+            const vocab_display = document.getElementById("output_1");
+
+            vocab_display.style.border = "solid";
+            vocab_display.style.padding = "5px";
+            vocab_display.style.fontWeight = "bold";
+            vocab_display.style.length = "50px";
+            vocab_display.style.height = "fit-content";
+            vocab_display.style.backgroundColor = "black";
+            vocab_display.style.color = "white";
+            vocab_display.style.border = "none";
+            vocab_display.style.display = "none";            
+
+            // const desc_display = document.getElementById("output_2");
+            
+            // desc_display.style.border = "solid";
+            // desc_display.style.padding = "5px";
+            // desc_display.style.fontWeight = "bold";
+            // desc_display.style.length = "50px";
+            // desc_display.style.backgroundColor = "black";
+            // desc_display.style.color = "white";
+            // desc_display.style.border = "none";
+            // desc_display.style.display = "none";
+        
+            const next_button = document.getElementById("next_button");
+            next_button.style.height = "fit-content";
+            next_button.style.justifyContent = "end";
+            
+            // console.log("function name is nodisplay function  |  got both inputs,submit_button and set the display to none to ignore empty output start button is set its properties with display block")
+        }
+
+    function refresh_func(){
+        const vocab_desc_display = document.getElementById("vocab_desc_div_id");
+
+        vocab_desc_display.style.display = "none";
+
+        // console.log("functin name is refresh_func | got the vocab_desc_div_id and set the display to none");
+
+    }
+
+    function count_final_func(){
+        var count_of_array = localStorage.getItem("vocab_in_ls");
+        // console.log("vocab_in_ls is fetched from localstorage with name \"count_of_array\" and the value is "+ count_of_array);
+        count_of_array = count_of_array.split(",");
+        // console.log("count_of_array is splitted with comma(,) as a separator and the value is Count_of_array = "+count_of_array)
+        count_of_array = count_of_array.length;
+        // console.log("lenght of coung_of_array is length = "+count_of_array);
+
+        var random_num = Math.floor(Math.random() * (count_of_array));
+        // console.log("a random number from the total count of an array is taken with name random_num = "+random_num);
+
+        final_vocab_output = localStorage.getItem('vocab_in_ls');
+        final_vocab_output = final_vocab_output.split(",");
+
+        final_desc_output = localStorage.getItem('desc_in_ls');
+        final_desc_output = final_desc_output.split(",");
+
+        final_eg_output = localStorage.getItem('eg_in_ls');
+        final_eg_output = final_eg_output.split(",");
+
+        // console.log("final_vocab_output is fetched from localstorage and splitted with comma(,) as seperator and so is the final_desc_output and the values are final_vocab_output = "+final_vocab_output + " final_desc_output = " + final_desc_output);
+
+        let final_vocab = document.getElementById("output_1");
+        final_vocab.innerHTML = (final_vocab_output[random_num]).replace(/\、/g, ",");
+        // console.log("final_vocab which is vocab output is feteched and innerHTML is changed with random_vocab ")
+
+        
+        // console.log("replacing must work");
+
+        // let final_desc = document.getElementById("output_2");
+        // final_desc.innerHTML = (final_desc_output[random_num]).replace(/\、/g, ",");
+
+
+        var random_num_1 = Math.floor(Math.random() * (count_of_array));
+        var random_num_2 = Math.floor(Math.random() * (count_of_array));
+        var random_num_3 = Math.floor(Math.random() * (count_of_array));
+        var random_num_4 = Math.floor(Math.random() * (count_of_array));
+
+        (function(){
+        let set_a = [random_num_1,random_num_2,random_num_3,random_num_4,random_num];
+        console.log("[random_num_1 = ",random_num_1," random_num_2 = ",random_num_2," random_num_3 = ",random_num_3, " random_num_4 =",random_num_4, " radnom_num = ",random_num)
+        let set_b = [];
+
+
+        while (set_a.length>0){
+            let new_random_num = (Math.floor(Math.random() * (set_a.length)));
+
+            console.log("new_randomnum is ",new_random_num);
+            set_b.push(set_a[new_random_num]);
+            set_a.splice(new_random_num,1);
+        }
+
+        // console.log("now set_b values is ",set_b);
+
+        set_a = set_b;
+
+        console.log("set_a final value is ", set_a);
+
+
+        //create labels using for loop
+        let check_for_radio_elements_by_id = document.getElementById("radio_id_1");
+
+        if (check_for_radio_elements_by_id){
+            
+            for(let i=1;i<=5;i++){
+                
+                const get_radio_elements = document.getElementById("radio_id_"+i);
+                get_radio_elements.value = final_desc_output[set_a[i-1]];
+                // console.log(i + " = " + get_radio_elements.value);
+                // console.log("Set_a[i-1]= ",set_a[i-1]);
+                
+                
+
+                let get_label = document.getElementById("label_text_id_"+i);
+                get_label.innerText = get_radio_elements.value.replace(/\、/g, ",");
+
+                function answer(){
+                for (i=1;i<=5;i++){
+                let get_text_inside_label_text = document.getElementById("label_text_id_"+i);
+                const get_radio_elements = document.getElementById("radio_id_"+i);
+
+                console.log(get_text_inside_label_text.id,"is id of get_text_inside_label_text");
+                if(get_radio_elements.value == final_desc_output[random_num]){
+                    // console.log("getradioelemet.value = ",get_radio_elements.value,"\n",'get_text_inside_label_text = ', get_text_inside_label_text.innerText,"and the value of i is ",i,"and the id of get_text_inside_label_text is ", get_text_inside_label_text.id)
+                    // console.log("final_desc_output[random_num] = " + final_desc_output[random_num]);
+                    // console.log("random_num is "+ random_num);
+                    console.log("")
+                    get_text_inside_label_text.style.color = "green";
+                    console.log("color is green");
+                }
+                else{
+                    console.log("getradioelemet.value = ",get_radio_elements.value,"\n",'get_text_inside_label_text = ', get_text_inside_label_text.innerText,"and the value of i is ",i,"and the id of get_text_inside_label_text is ", get_text_inside_label_text.id)
+
+                    get_text_inside_label_text.style.color = "red";
+    
+                    console.log("color is red");
+
+                }
+                
+                }
+                }
+                
+                get_radio_elements.onclick = function() {
+                answer();
+                alert_func();
+                let create_eg_element = document.createElement("div");
+                document.body.appendChild(create_eg_element);
+                create_eg_element.id = 'eg_output_id';
+                create_eg_element.innerText = final_eg_output[random_num].replace(/\、/g, ",");
+                console.log("final_eg_output is = "+final_eg_output[random_num]);
+                //undisable next button
+                console.log("next_button_enable has to work")
+                document.getElementById("next_button").removeAttribute("disabled");
+                }
+                
+                
+                }
+        }
+        else{
+  
+            for(let i=1; i<=5; i++){
+                let createElement = document.createElement("input");
+                createElement.id = "radio_id_"+i;
+                createElement.className = "radio_class";
+                let get_labels_id = document.getElementById("labels_id");
+                // console.log("created elemet with id","radio_id_"+i);
+                // console.log("else is working");
+
+                createElement.type = "radio";
+                createElement.setAttribute("name","choice");
+
+                let get_label_div = document.getElementById("label_div_"+i);
+                get_label_div.insertBefore(createElement, get_label_div.firstChild);
+
+                //let get Radios                
+
+                const get_radio_elements = document.getElementById("radio_id_"+i);
+                get_radio_elements.value = final_desc_output[set_a[i-1]];
+                // console.log("Set_a[i-1]= ",set_a[i-1]);
+                get_radio_elements.onclick = function() {
+                answer();
+                alert_func();
+                let create_eg_element = document.createElement("div");
+                document.body.appendChild(create_eg_element);
+                create_eg_element.id = 'eg_output_id';
+                create_eg_element.innerText = final_eg_output[random_num].replace(/\、/g, ",");
+                console.log("final_eg_output is = "+final_eg_output[random_num]);
+                console.log("next_button_enable has to work")
+                document.getElementById("next_button").removeAttribute("disabled");
+                };
+                //get labels
+
+                let get_label = document.getElementById("label_text_id_"+i);
+                get_label.innerText = get_radio_elements.value.replace(/\、/g, ",");
+
+                function create_eg(){
+                let create_eg_element = document.createElement("div");
+                document.body.appendChild(create_eg_element);
+                create_eg_element.id = 'eg_output_id';
+                create_eg_element.innerText = final_eg_output[random_num].replace(/\、/g, ",");
+                console.log("final_eg_output is = "+final_eg_output[random_num]);
+        }
+
+                function answer(){
+                for (i=1;i<=5;i++){
+                let get_text_inside_label_text = document.getElementById("label_text_id_"+i);
+                const get_radio_elements = document.getElementById("radio_id_"+i);
+
+                console.log(get_text_inside_label_text.id,"is id of get_text_inside_label_text");
+                if(get_radio_elements.value == final_desc_output[random_num]){
+                    // console.log("getradioelemet.value = ",get_radio_elements.value,"\n",'get_text_inside_label_text = ', get_text_inside_label_text.innerText,"and the value of i is ",i,"and the id of get_text_inside_label_text is ", get_text_inside_label_text.id)
+                    // console.log("final_desc_output[random_num] = " + final_desc_output[random_num]);
+                    // console.log("random_num is "+ random_num);
+                    get_text_inside_label_text.style.color = "green";
+                    console.log("color is green");
+                }
+                    
+                else{
+                    console.log("getradioelemet.value = ",get_radio_elements.value,"\n",'get_text_inside_label_text = ', get_text_inside_label_text.innerText,"and the value of i is ",i,"and the id of get_text_inside_label_text is ", get_text_inside_label_text.id)
+
+                    get_text_inside_label_text.style.color = "red";
+    
+                    console.log("color is red");
+
+                }
+                
+                }
+                //display example
+                
+
+                }
+
+
+
+            }
+        }        
+        //now get the radio elements 
+
+        // let get_radio_1 = document.getElementById("radio_id_1");
+        // let get_radio_2 = document.getElementById("radio_id_2");
+        // let get_radio_3 = document.getElementById("radio_id_3");
+        // let get_radio_4 = document.getElementById("radio_id_4");
+        // let get_radio_5 = document.getElementById("radio_id_5");
+
+
+        // Change the value attribute of all the elements
+        // get_radio_1.setAttribute("value", final_desc_output[set_a[0]]);
+        // get_radio_2.setAttribute("value", final_desc_output[set_a[1]]);
+        // get_radio_3.setAttribute("value", final_desc_output[set_a[2]]);
+        // get_radio_4.setAttribute("value", final_desc_output[set_a[3]]);
+        // get_radio_5.setAttribute("value", final_desc_output[set_a[4]]);
+
+
+        //Now create elements for labels
+
+
+        
+
+        // get_radio_1.setAttribute("value", final_desc_output[set_a[0]]);
+        // get_radio_2.setAttribute("value", final_desc_output[set_a[1]]);
+        // get_radio_3.setAttribute("value", final_desc_output[set_a[2]]);
+        // get_radio_4.setAttribute("value", final_desc_output[set_a[3]]);
+        // get_radio_5.setAttribute("value", final_desc_output[set_a[4]]);
+
+        // get_radio_1.value = final_desc_output[set_a[0]];
+        // get_radio_2.value = final_desc_output[set_a[1]];
+        // get_radio_3.value = final_desc_output[set_a[2]];
+        // get_radio_4.value = final_desc_output[set_a[3]];
+        // get_radio_5.value = final_desc_output[set_a[4]];
+
+        // console.log("work");
+        })();
+    }
+
+    function start_func(){
+        let get_next_button = document.getElementById("next_button");
+        next_button = get_next_button.innerText = "Next";
+
+        // console.log("function name is start_func | got next_button and set innertext to Next");
+    }
+    
+    function output_display_regain(){
+        let get_vocab = document.getElementById("output_1");
+        // let get_desc = document.getElementById("output_2");
+
+        get_vocab.style.display = "block";
+        // get_desc.style.display = "block";
+
+        // console.log("function name is output_display_regain  |  got output_1 and output_2 and set the display property to block");
+    }
+
+    function delete_shuffle_add_submit(){
+        let get_shuffle_button = document.getElementById("shuffle-button-id");
+        get_shuffle_button.remove();
+
+
+
+        let get_bottom_nav_div = document.getElementById("bottom-nav-id");
+        let create_div = document.createElement("button");
+        let created_div = create_div;
+        get_bottom_nav_div.appendChild(created_div);
+        created_div.id = "bigger_submit_butt";
+        created_div.innerHTML = "Submit";
+
+        var get_bigger_submit_butt = document.getElementById("bigger_submit_butt");
+        get_bigger_submit_butt.addEventListener("click",function() {
+            delete_submit_add_shuffle();
+            // console.log("delete_shuffle_add_submit is worked  |  got bigger_submit_butt and removed  |  created another button and added with the id shuffle-button-id and set the innerHTML to Shuffle  |  got vocab_desc_div_id and set the display property to none  |  got shuffle-button-id and set the onclick property to delete_shuffle_add_submit  |  and got vocab_input, desc_input, submit_button and set the display property to block");
+
+            let get_vocab_input = document.getElementById("vocab_input");
+            let get_desc_input = document.getElementById("desc_input");
+            let get_smaller_submit_butt = document.getElementById("submit_button");
+            let get_input_id = document.getElementById("input-id");
+            let get_next_butt = document.getElementById("next_button");
+
+            get_vocab_input.style.display = "inline-block";
+            get_desc_input.style.display = "inline-block";
+            get_smaller_submit_butt.style.display = "inline-block";
+            get_input_id.style.display = "flex";
+            get_next_butt.style.display = "none";
+
+
+            //set display of radio division to none
+            let get_labels = document.getElementById("labels_id");
+            get_labels.style.display = "none";
+
+            //display on for eg
+            const no_display_eg = document.getElementById("eg_id");
+            no_display_eg.style.display = "block";
+            
+            //change Next button innertext to Start
+            get_next_butt.innerText = "Start";
+
+            //setting example display to none
+            let get_eg = document.getElementById("eg_id");
+            get_eg.style.display = none;
+            //setting set_count to 0 so next time when you hit on start button it must create five of radio elements.
+        })
+        // console.log("fucntion name is delete_shuffle_add_submit function  |  got shuffle-button-id and removed first shuffle button using id and got bottom division and created another button called bigger-submit-button and when clicked on it delete_submit_add_shuffle works and nodisplay also is now running");
+    }
+
+
+
+
+    function delete_submit_add_shuffle(){
+        let get_submit_button = document.getElementById("bigger_submit_butt");
+        get_submit_button.remove();
+
+        let get_bottom_nav_div = document.getElementById("bottom-nav-id");
+        let create_div = document.createElement("button");
+        let created_div = create_div;
+        get_bottom_nav_div.appendChild(created_div);
+        created_div.id = "shuffle-button-id";
+        created_div.innerHTML = "Shuffle";
+
+        var get_input_div = document.getElementById("input-id");
+        get_input_div.style.display = "block";
+
+        var get_shuffle_button_id = document.getElementById("shuffle-button-id");
+        let get_vocab = document.getElementById("output_1");
+        // let get_desc = document.getElementById("output_2");
+
+        get_vocab.style.display = "none";
+        // get_desc.style.display = "none";
+
+        get_shuffle_button_id.addEventListener("click",function(){
+            document.getElementById("next_button").removeAttribute("disabled");
+
+            delete_shuffle_add_submit();
+
+            const no_display_vocab = document.getElementById("vocab_input");
+            const no_display_desc = document.getElementById("desc_input");
+            const submit_button_display = document.getElementById("submit_button");
+            let get_vocab = document.getElementById("output_1");
+            // let get_desc = document.getElementById("output_2");
+            let get_next_butt = document.getElementById("next_button");
+
+
+            no_display_vocab.style.display = "none";
+            no_display_desc.style.display = "none";
+            submit_button_display.style.display = "none";
+            get_vocab.style.display = "inline-block";
+            // get_desc.style.display = "inline-block";
+            get_next_butt.style.display = "inline-block";
+
+
+
+            // console.log("function name is delete_submit_add_shuffle  |  got bigger_submit_butt and removed it  |  got bottom-nav-id and added another button element called shuffle-button-id  |  got vocab_desc_div_id set display property to none  |    got  shuffle-button-id and set the onclick property to delete_shuffle_and_add_submit function and got vocab_input, desc_input, submit_button and set the display properties to block.")
+            nodisplay_func();
+
+
+
+        })
+    }
+    function radio_display_on(){
+            //turning on display of radios
+
+            let get_labels = document.getElementById("labels_id");
+            get_labels.style.display = "flex";
+            get_labels.style.alignSelf = "center";
+        }
+    function color_dropper(){
+    for (i=1;i<=5;i++){
+            let get_text_inside_label_text = document.getElementById("label_text_id_"+i);
+                get_text_inside_label_text.style.color = "black";
+                // console.log("color is black");
+            let get_radio_by_id = document.getElementById("radio_id_"+i);
+            get_radio_by_id.checked = false;
+            
+            }
+    }
+    function attempted_count(){
+        let get_next_butt = document.getElementById("next_button");
+        // console.log(get_next_butt.innerText,", Next")
+        if((get_next_butt.innerText) == "Next"){
+            if (localStorage.getItem("count_of_attempted")){
+                number_of_attempt = localStorage.getItem("count_of_attempted");
+                number_of_attempt = parseInt(number_of_attempt);
+                number_of_attempt = number_of_attempt + 1;
+                // console.log("attemted_count is if ",number_of_attempt)
+                let get_attempted_element = document.getElementById("attempted_id");
+                get_attempted_element.innerText = "number_of_attempt = "+number_of_attempt;
+                localStorage.setItem("count_of_attempted",number_of_attempt);
+            }
+            else{
+                let number_of_attempt = 0;
+                number_of_attempt = number_of_attempt + 1;
+                // console.log("attemted_count is else ",number_of_attempt)
+                let get_attempted_element = document.getElementById("attempted_id");
+                get_attempted_element.innerText = "number_of_attempts = "+number_of_attempt;
+                localStorage.setItem("count_of_attempted",number_of_attempt);
+            }
+        }
+        else{
+            //Nothing
+        }
+    }
+    function correct_count(){
+        if(localStorage.getItem("correct_attempts")){
+            for(i=1;i<=5;i++){
+                let get_radio_elements = document.getElementById("radio_id_"+i);
+                if (get_radio_elements.checked){
+                    let get_label_text = document.getElementById("label_text_id_"+i);
+
+                    if(get_label_text.style.color == "green"){
+                        number_of_corrects = localStorage.getItem('correct_attempts');
+                        number_of_corrects = parseInt(number_of_corrects);
+                        number_of_corrects = number_of_corrects + 1;
+                        let get_correct_element = document.getElementById("correct_id");
+                        get_correct_element.innerText = "Correct Attempts = " + number_of_corrects;
+                        localStorage.setItem("correct_attempts",number_of_corrects);
+                    }
+                }
+            }
+
+
+        }
+        else{
+            let number_of_corrects = 0;
+            for(i=1;i<=5;i++){
+                let get_radio_elements = document.getElementById("radio_id_"+i);
+                if (get_radio_elements.checked){
+                    let get_label_text = document.getElementById("label_text_id_"+i);
+                    if(get_label_text.style.color == "green"){
+                        number_of_corrects = number_of_corrects + 1;
+                        let get_correct_element = document.getElementById("correct_id");
+                        get_correct_element.innerText = "Correct Attempts = " + number_of_corrects;
+                        localStorage.setItem("correct_attempts",number_of_corrects);
+                    }
+                }
+            }
+
+    }
+    }
+
+    
+    function alert_func(){
+    var alert_count = 0;
+
+    let get_radio_element_1 = document.getElementById("radio_id_1");
+    let get_radio_element_2 = document.getElementById("radio_id_2");
+    let get_radio_element_3 = document.getElementById("radio_id_3");
+    let get_radio_element_4 = document.getElementById("radio_id_4");
+    let get_radio_element_5 = document.getElementById("radio_id_5");
+
+
+            if(get_radio_element_1.checked){
+                alert_count = alert_count+1;
+                if(alert_count == 1){
+                    get_radio_element_2.setAttribute("disabled", true);
+                    get_radio_element_3.setAttribute("disabled", true);
+                    get_radio_element_4.setAttribute("disabled", true);
+                    get_radio_element_5.setAttribute("disabled", true);
+                }
+            }
+            if(get_radio_element_2.checked){
+                alert_count = alert_count+1;
+                if(alert_count == 1){
+                    get_radio_element_1.setAttribute("disabled", true);
+                    get_radio_element_3.setAttribute("disabled", true);
+                    get_radio_element_4.setAttribute("disabled", true);
+                    get_radio_element_5.setAttribute("disabled", true);
+
+                }
+            }
+            if(get_radio_element_3.checked){
+                alert_count = alert_count+1;
+                if(alert_count == 1){
+                    get_radio_element_1.setAttribute("disabled", true);
+                    get_radio_element_2.setAttribute("disabled", true);
+                    get_radio_element_4.setAttribute("disabled", true);
+                    get_radio_element_5.setAttribute("disabled", true);
+
+                }
+            }
+            if(get_radio_element_4.checked){
+                alert_count = alert_count+1;
+                if(alert_count == 1){
+                    get_radio_element_1.setAttribute("disabled", true);
+                    get_radio_element_2.setAttribute("disabled", true);
+                    get_radio_element_3.setAttribute("disabled", true);
+                    get_radio_element_5.setAttribute("disabled", true);
+
+                }
+            }
+            if(get_radio_element_5.checked){
+                alert_count = alert_count+1;
+                if(alert_count == 1){
+                    get_radio_element_1.setAttribute("disabled", true);
+                    get_radio_element_3.setAttribute("disabled", true);
+                    get_radio_element_4.setAttribute("disabled", true);
+                    get_radio_element_2.setAttribute("disabled", true);
+
+                }
+            }
+        return alert_count;
+    
+    }
+    
+    function disable_disabled(){
+    let get_radio_element_1 = document.getElementById("radio_id_1");
+    let get_radio_element_2 = document.getElementById("radio_id_2");
+    let get_radio_element_3 = document.getElementById("radio_id_3");
+    let get_radio_element_4 = document.getElementById("radio_id_4");
+    let get_radio_element_5 = document.getElementById("radio_id_5");
+
+
+    get_radio_element_1.removeAttribute("disabled");
+    get_radio_element_2.removeAttribute("disabled");
+    get_radio_element_3.removeAttribute("disabled");
+    get_radio_element_4.removeAttribute("disabled");
+    get_radio_element_5.removeAttribute("disabled");
+    }
+
+    function delete_eg(){
+        const get_eg = document.getElementById("eg_output_id");
+        get_eg.remove();
+    }
+    function cant_skip(){
+    const get_next_butt = document.getElementById("next_button");
+    try{
+    if(radio_id_1){
+        console.log("radio_id_1 is detected");
+        let get_radio_element_1 = document.getElementById("label_text_id_1");
+        let get_next_butt = document.getElementById("next_button");
+        if(get_radio_element_1.style.color != 'black'){
+            //
+        }
+        else{
+            // alert("please select atlease one answer");
+        }
+    }
+    }catch(error){
+        //
+    }
+    }
+    
+    
+    const get_butt_id = document.getElementById("next_button");
+
+    get_butt_id.addEventListener("click",function(){
+        get_butt_id.setAttribute("disabled",true);
+    })
+
+    function clear_func(){
+        let get_vocab_input = document.getElementById("vocab_input");
+        let get_desc_input = document.getElementById("desc_input");
+        let get_eg_input = document.getElementById("example_id");
+
+
+        get_vocab_input.value = "";
+        get_desc_input.value = "";
+        get_eg_input.value = "";
+    }
+
+
+    </script>
+
+</body>
+</html>
