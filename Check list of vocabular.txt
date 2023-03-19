@@ -1,4 +1,0 @@
-•	Then create a radio input with five options in which four can be any random value from output2 but one of it is exact output2 value of output1 index
-•	Then Create 4 shuffle elements.
-•	Then in the five <p> elements created in one of the previous step one has to be the element with same index that of output1 and the remaining four would be anything but exempt same elements being taken. 
-•	After that when clicked on next check if the input has given if not make it not proceed further and alert that the input is not provided and give change to provide input.
